@@ -59,8 +59,10 @@ public class Cart {
      */
     public double getAverageValue()
     {
-        // TODO implement the method
-        return 0.0;
+        double totalQuantity = cart.stream().mapToDouble(cart -> cart.getQuantity()).sum();
+        double totalPrice = this.getTotalValue();
+        return totalPrice/totalQuantity;
+        
     }
 
     /**
@@ -70,8 +72,8 @@ public class Cart {
     public Product findProductInCartLines(Long productId)
     {
         CartLine line = cart.stream()
-        		.filter(cartLine -> cartLine.getProduct().getId() == productId)
-        		.findFirst().get();
+        		.filter(cartLine -> cartLine.getProduct().getId().equals(productId))
+        		.findFirst().orElse(null);
     	return line.getProduct();
     }
 

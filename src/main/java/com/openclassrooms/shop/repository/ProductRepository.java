@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -52,12 +53,16 @@ public class ProductRepository {
      * @param productId ID of the getProductById
      * @param quantityToRemove Quantity of the getProductById
      */
-    public void updateProductStocks(int productId, int quantityToRemove) {
-        Product product = products.stream().filter(p -> p.getId() == productId).findFirst().get();
+    public void updateProductStocks(Long productId, int quantityToRemove) {
+        Product product = products.stream().filter(p -> p.getId().equals(productId)).findFirst().get();
         product.setStock(product.getStock() - quantityToRemove);
 
         if (product.getStock() == 0){
             products.remove(product);
         }
     }
+
+	public Product findOne(Long ProductId) {
+		return products.stream().filter(p -> p.getId().equals(ProductId)).findFirst().get();
+	}
 }
