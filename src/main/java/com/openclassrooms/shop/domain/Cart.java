@@ -3,16 +3,21 @@ package com.openclassrooms.shop.domain;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class Cart {
 
+	private List<CartLine> cart;
+	
+	public Cart() {
+		this.cart = new ArrayList<CartLine>();
+	}
     /**
      *
      * @return the actual cartline list
      */
     public List<CartLine> getCartLineList() {
-        //TODO implement the method
-        return null;
+        return cart;
     }
 
     /**
@@ -22,6 +27,14 @@ public class Cart {
      */
     public void addItem(Product product, int quantity) {
         // TODO implement the method
+    	CartLine existingItem = cart.stream()
+    			.filter(cart -> cart.getProduct().equals(product))
+    			.findFirst().orElse(null);
+    	if (existingItem == null) {
+        	cart.add(new CartLine(product, quantity));
+    	} else {
+    		existingItem.setQuantity(existingItem.getQuantity() + quantity);
+    	}
     }
 
     /**
@@ -38,9 +51,7 @@ public class Cart {
      */
     public double getTotalValue()
     {
-         //TODO implement the method
-        return 0.0;
-
+    	return cart.stream().mapToDouble(CartLine::getSubtotal).sum();
     }
 
     /**
@@ -58,8 +69,10 @@ public class Cart {
      */
     public Product findProductInCartLines(Long productId)
     {
-        // TODO implement the method
-        return null;
+        CartLine line = cart.stream()
+        		.filter(cartLine -> cartLine.getProduct().getId() == productId)
+        		.findFirst().get();
+    	return line.getProduct();
     }
 
     /**
